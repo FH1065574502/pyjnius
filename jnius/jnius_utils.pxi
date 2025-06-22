@@ -278,7 +278,6 @@ cdef int calculate_score(sign_args, args, is_varargs=False) except *:
     cdef JavaClass jc
     cdef int args_len = len(args)
     cdef int sign_args_len = len(sign_args)
-    from ctypes import c_long as long
 
     if args_len != sign_args_len and not is_varargs:
         # if the number of arguments expected is not the same
@@ -320,10 +319,10 @@ cdef int calculate_score(sign_args, args, is_varargs=False) except *:
             continue
 
         if r == 'S' or r == 'I':
-            if isinstance(arg, int) or (
-                    (isinstance(arg, long) and arg < 2147483648)):
-                score += 10
-                continue
+        if isinstance(arg, int):
+        score += 10
+        continue
+
             elif isinstance(arg, float):
                 score += 5
                 continue
@@ -331,9 +330,10 @@ cdef int calculate_score(sign_args, args, is_varargs=False) except *:
                 return -1
 
         if r == 'J':
-            if isinstance(arg, int) or isinstance(arg, long):
-                score += 10
-                continue
+        if isinstance(arg, int):
+        score += 10
+        continue
+
             elif isinstance(arg, float):
                 score += 5
                 continue
